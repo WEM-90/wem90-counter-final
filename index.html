@@ -96,6 +96,15 @@
       <td id="payment-countdown">--</td>
     </tr>
   </table>
+  <p>عدد الزوار: <span id="counter">جاري التحميل...</span></p>
+
+<script>
+fetch('https://api.countapi.xyz/hit/wem90-official/visits')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('counter').innerText = data.value;
+  });
+</script>
   
 <p>عدد الزوار: <span id="counter">جاري التحميل...</span></p>
 
