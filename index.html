@@ -96,7 +96,16 @@
       <td id="payment-countdown">--</td>
     </tr>
   </table>
+  
+<p>عدد الزوار: <span id="counter">جاري التحميل...</span></p>
 
+<script>
+fetch('https://api.countapi.xyz/hit/wem90-counter-final/visits')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('counter').innerText = data.value;
+  });
+</script>
   <div class="notice">الضمان لا يصرف خلال عطلة نهاية الأسبوع</div>
   <div class="visitor-counter">عدد الزوار: <span id="visitor-count">0</span></div>
   <div class="footer">
