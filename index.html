@@ -6,20 +6,23 @@
   <title>مواعيد صدور الأهلية ونزول الضمان المطور</title>
   <link href="https://fonts.googleapis.com/css2?family=Almarai&display=swap" rel="stylesheet">
   <style>
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
       font-family: 'Almarai', sans-serif;
       text-align: center;
       color: #fff;
-      direction: rtl;
-      unicode-bidi: plaintext;
+      background: transparent;
+    }
+
+    body {
       background: transparent;
     }
 
     video {
       position: fixed;
-      bottom: 0;
+      top: 0;
       left: 0;
       width: 100%;
       height: 100%;
@@ -27,19 +30,10 @@
       z-index: -1;
     }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 85vh;
-      padding-top: 90px;
-    }
-
     h1 {
       color: #ff9900;
       font-size: 1.05rem;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .section-title {
@@ -52,14 +46,14 @@
       width: 90%;
       margin: 10px auto 20px auto;
       border-collapse: collapse;
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.4); /* خلفية سوداء شفافة للجداول */
       border-radius: 8px;
       font-size: 0.85rem;
     }
 
     th {
-      background-color: rgba(91, 58, 29, 0.5);
-      color: #f5deb3;
+      background-color: rgba(91, 58, 29, 0.5); /* بني غامق شفاف شوي */
+      color: #f5deb3; /* بيج */
       padding: 6px;
     }
 
@@ -74,44 +68,26 @@
     }
 
     @media (max-width: 480px) {
-      .count-number {
-        font-size: 0.75rem;
-      }
-
-      h1 {
-        font-size: 0.9rem;
-      }
-
-      .section-title {
-        font-size: 0.75rem;
-      }
-
-      table {
-        font-size: 0.75rem;
-      }
-
-      #visitor-count {
-        font-size: 1.3rem;
-      }
-
-      .group-link {
-        font-size: 0.6rem;
-      }
+      h1 { font-size: 0.95rem; }
+      .section-title { font-size: 0.8rem; }
+      table { font-size: 0.72rem; }
+      .count-number { font-size: 0.75rem; } /* تصغير الأرقام عند الزوار */
+      .visitor-counter { font-size: 0.7rem; }
+      .group-link { font-size: 0.6rem; }
     }
 
     .visitor-counter {
       font-size: 0.8rem;
-      margin-bottom: 5px;
+      margin: 10px 0 2px;
     }
 
     #visitor-count {
       font-weight: bold;
-      font-size: 1.6rem;
     }
 
     .group-link {
       font-size: 0.65rem;
-      margin-top: -2px;
+      margin-top: 2px;
       color: #00bfff;
       text-decoration: none;
       display: block;
@@ -124,37 +100,35 @@
     <source src="eid2.mp4" type="video/mp4">
   </video>
 
-  <div class="container">
-    <h1>مواعيد صدور الأهلية ونزول الضمان المطور</h1>
+  <h1>مواعيد صدور الأهلية ونزول الضمان المطور</h1>
 
-    <div class="section-title">صدور أهلية الضمان المطور</div>
-    <table>
-      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
-      <tr>
-        <td id="eligibility-date" class="count-number">--</td>
-        <td id="eligibility-day">--</td>
-        <td id="eligibility-remaining" class="count-number">--</td>
-        <td id="eligibility-countdown" class="count-number">--</td>
-      </tr>
-    </table>
+  <div class="section-title">صدور أهلية الضمان المطور</div>
+  <table>
+    <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
+    <tr>
+      <td id="eligibility-date" class="count-number">--</td>
+      <td id="eligibility-day" class="count-number">--</td>
+      <td id="eligibility-remaining" class="count-number">--</td>
+      <td id="eligibility-countdown" class="count-number">--</td>
+    </tr>
+  </table>
 
-    <div class="section-title">نزول الضمان المطور</div>
-    <table>
-      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
-      <tr>
-        <td id="payment-date" class="count-number">--</td>
-        <td id="payment-day">--</td>
-        <td id="payment-remaining" class="count-number">--</td>
-        <td id="payment-countdown" class="count-number">--</td>
-      </tr>
-    </table>
+  <div class="section-title">نزول الضمان المطور</div>
+  <table>
+    <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
+    <tr>
+      <td id="payment-date" class="count-number">--</td>
+      <td id="payment-day" class="count-number">--</td>
+      <td id="payment-remaining" class="count-number">--</td>
+      <td id="payment-countdown" class="count-number">--</td>
+    </tr>
+  </table>
 
-    <div class="visitor-counter">
-      عدد الزائرين: <span id="visitor-count" class="count-number">0</span>
-    </div>
-
-    <a href="https://t.me/aldmmaan" class="group-link" target="_blank">قروب الضمان المطور</a>
+  <div class="visitor-counter">
+    عدد الزائرين: <span id="visitor-count" class="count-number">0</span>
   </div>
+
+  <a href="https://t.me/aldmmaan" target="_blank" class="group-link">قروب الضمان المطور</a>
 
   <script>
     fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
@@ -166,7 +140,7 @@
           });
       })
       .catch(() => {
-        document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
+        document.getElementById('visitor-count').textContent = 'خطأ';
       });
 
     const weekdays = ["الأحــد","الإثنيــن","الثلاثــاء","الأربعــاء","الخميــس","الجمعــة","السبــت"];
