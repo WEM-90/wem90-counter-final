@@ -38,14 +38,6 @@
       min-height: 80vh;
     }
 
-    a.link-top {
-      color: #00bfff;
-      font-size: 0.85rem;
-      margin-top: 15px;
-      text-decoration: none;
-      display: block;
-    }
-
     h1 {
       color: #ff9900;
       font-size: 1.1rem;
@@ -70,12 +62,12 @@
     }
 
     th {
-      background-color: rgba(91, 58, 29, 0.1); /* بني غامق شفاف جدًا */
-      color: #fff;
+      background-color: rgba(91, 58, 29, 0.6); /* بني غامق شفاف */
+      color: #ff9900; /* برتقالي */
     }
 
     td {
-      background-color: transparent; /* صفوف شفافة */
+      background-color: transparent;
     }
 
     .countdown {
@@ -91,14 +83,21 @@
       font-size: 0.85rem;
     }
 
+    .link-bottom {
+      color: #00bfff;
+      font-size: 0.75rem;
+      text-decoration: none;
+      margin-top: 6px;
+      display: block;
+    }
+
     @media (max-width: 480px) {
       table { font-size: 0.75rem; }
       .section-title { font-size: 0.85rem; }
       .visitor-counter { font-size: 0.75rem; }
       h1 { font-size: 0.95rem; }
-      .countdown {
-        font-size: 0.7rem;
-      }
+      .countdown { font-size: 0.7rem; }
+      .link-bottom { font-size: 0.7rem; }
     }
   </style>
 </head>
@@ -109,7 +108,6 @@
 </video>
 
 <div class="container">
-  <a href="https://t.me/aldmmaan" target="_blank" class="link-top">قروب الضمان المطور</a>
 
   <h1>مواعيد صدور الأهلية ونزول الضمان المطور</h1>
 
@@ -138,6 +136,8 @@
   <div class="visitor-counter">
     عدد الزائرين: <span id="visitor-count">0</span>
   </div>
+
+  <a href="https://t.me/aldmmaan" target="_blank" class="link-bottom">قروب الضمان المطور</a>
 </div>
 
 <script>
@@ -187,8 +187,7 @@
     document.getElementById(prefix + "-remaining").textContent = `${days} يوم`;
     const countdownElement = document.getElementById(prefix + "-countdown");
     countdownElement.textContent = `${days}ي ${hours}س ${minutes}د ${seconds}ث`;
-    
-    // تصغير الأرقام فقط للزوار
+
     if (window.innerWidth <= 480) {
       countdownElement.classList.add("small");
     } else {
