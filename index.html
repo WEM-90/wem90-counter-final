@@ -5,41 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>مواعيد صدور الأهلية ونزول الضمان المطور</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Almarai&display=swap');
+    @font-face {
+      font-family: 'Alamani';
+      src: url('Alamani.ttf') format('truetype');
+    }
 
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
+      background: black;
+      font-family: 'Alamani', sans-serif;
+      color: white;
+      text-align: center;
     }
 
     body {
-      background: none;
-      font-family: 'Almarai', sans-serif;
-      text-align: center;
-      color: #fff;
-      position: relative;
+      background: transparent;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     h1 {
-      color: #ff9900;
-      font-size: 1.1rem;
-      margin: 15px 0 5px;
+      color: #ffa500;
+      margin: 15px 0 10px;
+      font-size: 1rem;
     }
 
     .section-title {
-      font-size: 1rem;
-      margin: 10px 0 6px 0;
+      font-size: 0.9rem;
+      margin: 10px 0;
       color: white;
     }
 
     table {
       width: 90%;
+      max-width: 600px;
       margin: 10px auto;
       border-collapse: collapse;
       background-color: rgba(80, 80, 80, 0.6);
       border-radius: 8px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
 
     th, td {
@@ -48,90 +59,92 @@
     }
 
     th {
-      background-color: #5a3b1a;
+      background-color: #4b2e1d;
       color: white;
     }
 
     .visitor-counter {
-      color: #eeeeee;
-      font-size: 0.75rem;
-      margin: 10px 0 5px;
+      font-size: 0.7rem;
+      margin: 10px 0;
     }
 
     #visitor-count {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 1.2rem;
+      font-size: 0.8rem;
     }
 
     .footer {
-      position: relative;
-      bottom: 15px;
       text-align: center;
-      font-size: 0.7rem;
-      color: #ff9900;
-      margin-top: 30px;
+      font-size: 0.75rem;
+      color: #ffa500;
+      margin-top: 10px;
     }
 
     .footer a {
+      display: block;
+      margin-top: 4px;
       color: #00bfff;
       text-decoration: none;
-      display: inline-block;
-      margin-top: 5px;
+      font-size: 0.75rem;
     }
 
-    video.bg-video {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: auto;
-      z-index: -1;
+    .notice {
+      color: orange;
+      font-size: 0.75rem;
+      margin-top: 8px;
     }
 
     @media (max-width: 480px) {
-      h1 { font-size: 1rem; }
-      .section-title { font-size: 0.9rem; }
-      table { font-size: 0.7rem; }
-      .visitor-counter, .footer { font-size: 0.65rem; }
-      #visitor-count { font-size: 1rem; }
+      table { font-size: 0.65rem; }
+      .visitor-counter { font-size: 0.6rem; }
+      #visitor-count { font-size: 0.7rem; }
+      .footer { font-size: 0.65rem; }
     }
   </style>
 </head>
 <body>
 
-  <h1>مواعيد صدور الأهلية ونزول الضمان المطور</h1>
+  <div class="container">
+    <h1>مواعيد صدور الأهلية ونزول الضمان المطور</h1>
 
-  <div class="section-title">صدور أهلية الضمان المطور</div>
-  <table>
-    <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
-    <tr>
-      <td id="eligibility-date">--</td>
-      <td id="eligibility-day">--</td>
-      <td id="eligibility-remaining">--</td>
-      <td id="eligibility-countdown">--</td>
-    </tr>
-  </table>
+    <div class="section-title">صدور أهلية الضمان المطور</div>
+    <table>
+      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
+      <tr>
+        <td id="eligibility-date">--</td>
+        <td id="eligibility-day">--</td>
+        <td id="eligibility-remaining">--</td>
+        <td id="eligibility-countdown">--</td>
+      </tr>
+    </table>
 
-  <div class="section-title">نزول الضمان المطور</div>
-  <table>
-    <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
-    <tr>
-      <td id="payment-date">--</td>
-      <td id="payment-day">--</td>
-      <td id="payment-remaining">--</td>
-      <td id="payment-countdown">--</td>
-    </tr>
-  </table>
+    <div class="section-title">نزول الضمان المطور</div>
+    <table>
+      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
+      <tr>
+        <td id="payment-date">--</td>
+        <td id="payment-day">--</td>
+        <td id="payment-remaining">--</td>
+        <td id="payment-countdown">--</td>
+      </tr>
+    </table>
 
-  <div class="visitor-counter">
-    عدد الزائرين: <span id="visitor-count">0</span>
+    <div class="visitor-counter">
+      عدد الزائرين: <span id="visitor-count">0</span>
+    </div>
+
+    <div class="footer">
+      أهلاً وسهلاً بالجميع
+      <a href="https://t.me/aldmmaan" target="_blank">قروب الضمان المطور</a>
+    </div>
+
+    <div class="notice">
+      تنويه!<br>
+      صدور الأهلية لا يتم في وقت محدد<br>
+      الضمان لا يُصرف خلال عطلة نهاية الأسبوع
+    </div>
   </div>
 
-  <div class="footer">
-    <a href="https://t.me/aldmmaan" target="_blank">قروب الضمان المطور</a>
-  </div>
-
-  <video class="bg-video" autoplay loop muted playsinline>
+  <video autoplay loop muted playsinline style="position: fixed; bottom: 0; left: 0; width: 100%; z-index: -1;">
     <source src="eid2.mp4" type="video/mp4">
   </video>
 
@@ -145,10 +158,10 @@
           });
       })
       .catch(() => {
-        document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
+        document.getElementById('visitor-count').textContent = 'خطأ';
       });
 
-    const weekdays = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+    const weekdays = ["الأحــد","الإثنيــن","الثلاثــاء","الأربعــاء","الخميــس","الجمعــة","السبــت"];
 
     function getNextDate(day) {
       const now = new Date();
@@ -157,10 +170,7 @@
       let target = new Date(year, month, day);
       if (target <= now) {
         month += 1;
-        if (month > 11) {
-          year += 1;
-          month = 0;
-        }
+        if (month > 11) { year += 1; month = 0; }
         target = new Date(year, month, day);
       }
       return target;
@@ -180,7 +190,7 @@
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
-      const dateStr = targetDate.getFullYear() + "-" + (targetDate.getMonth() + 1).toString().padStart(2, '0') + "-" + targetDate.getDate().toString().padStart(2, '0');
+      const dateStr = targetDate.getFullYear() + "-" + String(targetDate.getMonth() + 1).padStart(2, '0') + "-" + String(targetDate.getDate()).padStart(2, '0');
       document.getElementById(prefix + "-date").textContent = dateStr;
       document.getElementById(prefix + "-day").textContent = weekdays[targetDate.getDay()];
       document.getElementById(prefix + "-remaining").textContent = `${days} يوم`;
