@@ -15,7 +15,10 @@
       text-align: center;
       overflow-x: hidden;
     }
-
+.small-number {
+  font-size: 0.7rem;
+}
+    
     body {
       background: transparent;
     }
@@ -139,11 +142,10 @@
     </table>
 
     <div class="visitor-counter">
-      عدد الزائرين: <span id="visitor-count">0</span>
-    </div>
-    <a class="group-link" href="https://t.me/aldmmaan" target="_blank">قروب الضمان المطور</a>
-  </div>
-
+  عدد الزائرين: <span id="visitor-count" class="small-number">0</span>
+</div>
+  
+<a class="group-link" href="https://t.me/aldmmaan">قروب الضمان المطور</a> </span>
   <script>
     fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
       .then(() => {
