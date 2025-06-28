@@ -6,13 +6,14 @@
   <title>مواعيد صدور الأهلية ونزول الضمان المطور</title>
   <link href="https://fonts.googleapis.com/css2?family=Almarai&display=swap" rel="stylesheet">
   <style>
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
       padding: 0;
       font-family: 'Almarai', sans-serif;
       text-align: center;
       color: #fff;
+      direction: rtl;
+      unicode-bidi: plaintext;
       background: transparent;
     }
 
@@ -31,14 +32,14 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      min-height: 90vh;
-      padding-top: 40px;
+      min-height: 85vh;
+      padding-top: 90px;
     }
 
     h1 {
       color: #ff9900;
-      font-size: 1rem;
-      margin-bottom: 8px;
+      font-size: 1.05rem;
+      margin-bottom: 10px;
     }
 
     .section-title {
@@ -49,54 +50,71 @@
 
     table {
       width: 90%;
-      margin: 5px auto 10px auto;
+      margin: 10px auto 20px auto;
       border-collapse: collapse;
-      background-color: transparent;
-      font-size: 0.8rem;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      font-size: 0.85rem;
     }
 
-    th, td {
+    th {
+      background-color: rgba(91, 58, 29, 0.5);
+      color: #f5deb3;
+      padding: 6px;
+    }
+
+    td {
       padding: 6px;
       border: 1px solid #555;
     }
 
-    th {
-      background-color: rgba(91, 58, 29, 0.4); /* بني غامق شفاف قليل */
-      color: #f5deb3; /* بيج */
-    }
-
     .count-number {
       font-size: 1rem;
+      direction: ltr;
+    }
+
+    @media (max-width: 480px) {
+      .count-number {
+        font-size: 0.75rem;
+      }
+
+      h1 {
+        font-size: 0.9rem;
+      }
+
+      .section-title {
+        font-size: 0.75rem;
+      }
+
+      table {
+        font-size: 0.75rem;
+      }
+
+      #visitor-count {
+        font-size: 1.3rem;
+      }
+
+      .group-link {
+        font-size: 0.6rem;
+      }
     }
 
     .visitor-counter {
-      color: #eeeeee;
       font-size: 0.8rem;
-      margin: 8px 0 4px;
+      margin-bottom: 5px;
     }
 
     #visitor-count {
       font-weight: bold;
       font-size: 1.6rem;
-      font-family: 'Almarai', sans-serif;
     }
 
     .group-link {
-      font-size: 0.6rem;
+      font-size: 0.65rem;
+      margin-top: -2px;
       color: #00bfff;
       text-decoration: none;
       display: block;
-      margin-top: 2px;
-    }
-
-    @media (max-width: 480px) {
-      h1 { font-size: 0.85rem; }
-      .section-title { font-size: 0.75rem; }
-      table { font-size: 0.7rem; }
-      th, td { padding: 4px; }
-      .count-number { font-size: 0.7rem; }
-      #visitor-count { font-size: 1.1rem; }
-      .group-link { font-size: 0.5rem; }
     }
   </style>
 </head>
@@ -113,10 +131,10 @@
     <table>
       <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
       <tr>
-        <td id="eligibility-date">--</td>
+        <td id="eligibility-date" class="count-number">--</td>
         <td id="eligibility-day">--</td>
-        <td class="count-number" id="eligibility-remaining">--</td>
-        <td class="count-number" id="eligibility-countdown">--</td>
+        <td id="eligibility-remaining" class="count-number">--</td>
+        <td id="eligibility-countdown" class="count-number">--</td>
       </tr>
     </table>
 
@@ -124,15 +142,15 @@
     <table>
       <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
       <tr>
-        <td id="payment-date">--</td>
+        <td id="payment-date" class="count-number">--</td>
         <td id="payment-day">--</td>
-        <td class="count-number" id="payment-remaining">--</td>
-        <td class="count-number" id="payment-countdown">--</td>
+        <td id="payment-remaining" class="count-number">--</td>
+        <td id="payment-countdown" class="count-number">--</td>
       </tr>
     </table>
 
     <div class="visitor-counter">
-      عدد الزائرين: <span id="visitor-count">0</span>
+      عدد الزائرين: <span id="visitor-count" class="count-number">0</span>
     </div>
 
     <a href="https://t.me/aldmmaan" class="group-link" target="_blank">قروب الضمان المطور</a>
@@ -158,11 +176,7 @@
       let year = now.getFullYear();
       let month = now.getMonth();
       let target = new Date(year, month, day);
-      if (target <= now) {
-        month += 1;
-        if (month > 11) { year += 1; month = 0; }
-        target = new Date(year, month, day);
-      }
+      if (target <= now) { month += 1; if (month > 11) { year += 1; month = 0; } target = new Date(year, month, day); }
       return target;
     }
 
