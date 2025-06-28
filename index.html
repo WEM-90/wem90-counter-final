@@ -4,25 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>مواعيد صدور الأهلية ونزول الضمان المطور</title>
-  <link href="https://fonts.googleapis.com/css2?family=Almarai&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai&display=swap">
   <style>
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
       font-family: 'Almarai', sans-serif;
-      text-align: center;
       color: #fff;
-      background: black;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    body {
+      background: transparent;
     }
 
     video {
       position: fixed;
-      bottom: 0;
+      top: 0;
       left: 0;
+      object-fit: cover;
       width: 100%;
       height: 100%;
-      object-fit: cover;
       z-index: -1;
     }
 
@@ -31,186 +35,178 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 75vh;
+      min-height: 80vh;
     }
 
-    .telegram-link {
-      margin: 10px 0 4px;
-      font-size: 0.8rem;
-    }
-
-    .telegram-link a {
+    a.link-top {
       color: #00bfff;
+      font-size: 0.85rem;
+      margin-top: 15px;
       text-decoration: none;
+      display: block;
     }
 
     h1 {
       color: #ff9900;
       font-size: 1.1rem;
-      margin-bottom: 10px;
+      margin: 8px 0;
     }
 
     .section-title {
       font-size: 0.95rem;
-      margin: 10px 0 6px 0;
-      color: #ffffff;
+      margin: 12px 0 6px 0;
     }
 
     table {
       width: 90%;
-      margin: 5px auto 15px auto;
+      margin: 8px auto;
       border-collapse: collapse;
-      background-color: transparent;
-      border-radius: 8px;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 6px;
+      border: 1px solid #555;
     }
 
     th {
-      background-color: rgba(91, 58, 29, 0.3); /* بني غامق شفاف جدا */
-      color: white;
-      padding: 6px;
-      border: 1px solid #444;
+      background-color: rgba(91, 58, 29, 0.1); /* بني غامق شفاف جدًا */
+      color: #fff;
     }
 
     td {
-      background-color: transparent;
-      border: 1px solid #444;
-      padding: 6px;
+      background-color: transparent; /* صفوف شفافة */
+    }
+
+    .countdown {
+      font-size: 1.1rem;
+    }
+
+    .countdown.small {
+      font-size: 0.8rem;
     }
 
     .visitor-counter {
-      color: #eeeeee;
-      font-size: 0.75rem;
-      margin: 10px 0;
-    }
-
-    #visitor-count {
-      font-weight: bold;
-      font-size: 1rem;
-      font-family: 'Almarai', sans-serif;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 0.7rem;
-      color: #ff9900;
-      margin-top: 20px;
+      margin-top: 12px;
+      font-size: 0.85rem;
     }
 
     @media (max-width: 480px) {
-      h1 { font-size: 1rem; }
+      table { font-size: 0.75rem; }
       .section-title { font-size: 0.85rem; }
-      table { font-size: 0.7rem; }
-      .visitor-counter { font-size: 0.7rem; }
-      #visitor-count { font-size: 0.85rem; }
-      .footer { font-size: 0.65rem; }
+      .visitor-counter { font-size: 0.75rem; }
+      h1 { font-size: 0.95rem; }
+      .countdown {
+        font-size: 0.7rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <video autoplay loop muted playsinline>
-    <source src="eid2.mp4" type="video/mp4">
-  </video>
+<video autoplay loop muted playsinline>
+  <source src="eid2.mp4" type="video/mp4">
+</video>
 
-  <div class="container">
-    <div class="telegram-link">
-      <a href="https://t.me/aldmmaan" target="_blank">قروب الضمان المطور</a>
-    </div>
+<div class="container">
+  <a href="https://t.me/aldmmaan" target="_blank" class="link-top">قروب الضمان المطور</a>
 
-    <h1>مواعيد صدور الأهلية ونزول الضمان المطور</h1>
+  <h1>مواعيد صدور الأهلية ونزول الضمان المطور</h1>
 
-    <div class="section-title">صدور أهلية الضمان المطور</div>
-    <table>
-      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
-      <tr>
-        <td id="eligibility-date">--</td>
-        <td id="eligibility-day">--</td>
-        <td id="eligibility-remaining">--</td>
-        <td id="eligibility-countdown">--</td>
-      </tr>
-    </table>
+  <div class="section-title">صدور أهلية الضمان المطور</div>
+  <table>
+    <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
+    <tr>
+      <td id="eligibility-date">--</td>
+      <td id="eligibility-day">--</td>
+      <td id="eligibility-remaining">--</td>
+      <td id="eligibility-countdown" class="countdown">--</td>
+    </tr>
+  </table>
 
-    <div class="section-title">نزول الضمان المطور</div>
-    <table>
-      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
-      <tr>
-        <td id="payment-date">--</td>
-        <td id="payment-day">--</td>
-        <td id="payment-remaining">--</td>
-        <td id="payment-countdown">--</td>
-      </tr>
-    </table>
+  <div class="section-title">نزول الضمان المطور</div>
+  <table>
+    <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
+    <tr>
+      <td id="payment-date">--</td>
+      <td id="payment-day">--</td>
+      <td id="payment-remaining">--</td>
+      <td id="payment-countdown" class="countdown">--</td>
+    </tr>
+  </table>
 
-    <div class="visitor-counter">
-      عدد الزائرين: <span id="visitor-count">0</span>
-    </div>
-
-    <div class="footer">
-      جميع الحقوق محفوظة © 2025
-    </div>
+  <div class="visitor-counter">
+    عدد الزائرين: <span id="visitor-count">0</span>
   </div>
+</div>
 
-  <script>
-    fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
-      .then(() => {
-        fetch('https://sa-3fxj.onrender.com/get-count')
-          .then(res => res.json())
-          .then(data => {
-            document.getElementById('visitor-count').textContent = data.count;
-          });
-      })
-      .catch(() => {
-        document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
-      });
+<script>
+  fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
+    .then(() => {
+      fetch('https://sa-3fxj.onrender.com/get-count')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('visitor-count').textContent = data.count;
+        });
+    }).catch(() => {
+      document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
+    });
 
-    const weekdays = ["الأحــد","الإثنيــن","الثلاثــاء","الأربعــاء","الخميــس","الجمعــة","السبــت"];
+  const weekdays = ["الأحــد","الإثنيــن","الثلاثــاء","الأربعــاء","الخميــس","الجمعــة","السبــت"];
 
-    function getNextDate(day) {
-      const now = new Date();
-      let year = now.getFullYear();
-      let month = now.getMonth();
-      let target = new Date(year, month, day);
-      if (target <= now) {
-        month += 1;
-        if (month > 11) { year += 1; month = 0; }
-        target = new Date(year, month, day);
-      }
-      return target;
+  function getNextDate(day) {
+    const now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth();
+    let target = new Date(year, month, day);
+    if (target <= now) {
+      month += 1;
+      if (month > 11) { year += 1; month = 0; }
+      target = new Date(year, month, day);
     }
+    return target;
+  }
 
-    function adjustPaymentDate(date) {
-      const wd = date.getDay();
-      if (wd === 5) { date.setDate(date.getDate() - 1); }
-      if (wd === 6) { date.setDate(date.getDate() + 1); }
-      return date;
+  function adjustPaymentDate(date) {
+    const wd = date.getDay();
+    if (wd === 5) date.setDate(date.getDate() - 1);
+    if (wd === 6) date.setDate(date.getDate() + 1);
+    return date;
+  }
+
+  function updateSection(targetDate, prefix) {
+    const now = new Date();
+    const diff = targetDate - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+    const dateStr = targetDate.getFullYear() + "-" + (targetDate.getMonth()+1).toString().padStart(2, '0') + "-" + targetDate.getDate().toString().padStart(2, '0');
+    document.getElementById(prefix + "-date").textContent = dateStr;
+    document.getElementById(prefix + "-day").textContent = weekdays[targetDate.getDay()];
+    document.getElementById(prefix + "-remaining").textContent = `${days} يوم`;
+    const countdownElement = document.getElementById(prefix + "-countdown");
+    countdownElement.textContent = `${days}ي ${hours}س ${minutes}د ${seconds}ث`;
+    
+    // تصغير الأرقام فقط للزوار
+    if (window.innerWidth <= 480) {
+      countdownElement.classList.add("small");
+    } else {
+      countdownElement.classList.remove("small");
     }
+  }
 
-    function updateSection(targetDate, prefix) {
-      const now = new Date();
-      const diff = targetDate - now;
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      const dateStr = targetDate.getFullYear() + "-" + String(targetDate.getMonth() + 1).padStart(2, '0') + "-" + String(targetDate.getDate()).padStart(2, '0');
-      document.getElementById(prefix + "-date").textContent = dateStr;
-      document.getElementById(prefix + "-day").textContent = weekdays[targetDate.getDay()];
-      document.getElementById(prefix + "-remaining").textContent = `${days} يوم`;
-      document.getElementById(prefix + "-countdown").textContent = `${days}ي ${hours}س ${minutes}د ${seconds}ث`;
-    }
+  function updateAll() {
+    const eligibility = getNextDate(27);
+    let payment = getNextDate(1);
+    payment = adjustPaymentDate(payment);
+    updateSection(eligibility, "eligibility");
+    updateSection(payment, "payment");
+  }
 
-    function updateAll() {
-      const eligibility = getNextDate(27);
-      let payment = getNextDate(1);
-      payment = adjustPaymentDate(payment);
-      updateSection(eligibility, "eligibility");
-      updateSection(payment, "payment");
-    }
-
-    updateAll();
-    setInterval(updateAll, 1000);
-  </script>
+  updateAll();
+  setInterval(updateAll, 1000);
+</script>
 
 </body>
 </html>
