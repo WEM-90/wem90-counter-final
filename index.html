@@ -15,20 +15,22 @@
       text-align: center;
       overflow-x: hidden;
     }
-.small-number {
-  font-size: 0.8rem !important;
-}
 
-h1 {
-  font-size: 0.9rem !important;
-}
- .visitor-counter {
-  color: rgba(255, 153, 0, 0.8);
-}
+    .small-number {
+      font-size: 0.8rem !important;
+    }
 
-}    
+    h1 {
+      font-size: 0.9rem !important;
+    }
+
+    .visitor-counter {
+      color: rgba(255, 153, 0, 0.8);
+    }
+
     body {
-      background: transparent;
+  background-color: #f5f5dc; /* ← هذا لون بيج ناعم */
+}
     }
 
     video {
@@ -53,7 +55,7 @@ h1 {
     h1 {
       color: #e6d7bb;
       font-size: 0.7rem;
-      margin-bottom: 10px; 
+      margin-bottom: 10px;
     }
 
     .section-title {
@@ -75,7 +77,7 @@ h1 {
     }
 
     th {
-      background-color: rgba(91, 58, 29, 0.3); /* بني غامق شفاف شوي */
+      background-color: rgba(91, 58, 29, 0.3);
       color: beige;
     }
 
@@ -150,10 +152,12 @@ h1 {
     </table>
 
     <div class="visitor-counter">
-  عدد الزائرين : <span id="visitor-count" class="small-number">0</span>
-</div>
-  
-<a class="group-link" href="https://t.me/aldmmaan">تابعنا على قروب الضمان المطور</a> </span>
+      عدد الزائرين : <span id="visitor-count" class="small-number">0</span>
+    </div>
+
+    <a class="group-link" href="https://t.me/aldmmaan">تابعنا على قروب الضمان المطور</a>
+  </div>
+
   <script>
     fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
       .then(() => {
@@ -167,14 +171,21 @@ h1 {
         document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
       });
 
-    const weekdays = ["الأحــد","الإثنيــن","الثلاثــاء","الأربعــاء","الخميــس","الجمعــة","السبــت"];
+    const weekdays = ["الأحــد", "الإثنيــن", "الثلاثــاء", "الأربعــاء", "الخميــس", "الجمعــة", "السبــت"];
 
     function getNextDate(day) {
       const now = new Date();
       let year = now.getFullYear();
       let month = now.getMonth();
       let target = new Date(year, month, day);
-      if (target <= now) { month += 1; if (month > 11) { year += 1; month = 0; } target = new Date(year, month, day); }
+      if (target <= now) {
+        month += 1;
+        if (month > 11) {
+          year += 1;
+          month = 0;
+        }
+        target = new Date(year, month, day);
+      }
       return target;
     }
 
