@@ -19,7 +19,7 @@
 .colon {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #fcefdc; /* أو أي لون يناسب التصميم */
+  color: #ffffff; /* أو أي لون يناسب التصميم */
   padding: 0 6px;
 }
     
@@ -53,7 +53,7 @@
     }
 
     h1 {
-      color: #000000;
+      color: #ffffff;
       font-size: 0.7rem;
       margin-bottom: 10px;
     }
@@ -72,21 +72,25 @@
     }
 
     th, td {
-      padding: 6px;
-      border: 1px solid rgba(0, 0, 0, 0.2) !important;
-    }
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* حدود ناعمة */
+  color: #ffffff; /* ← نص أبيض */
+}
 
-    th {
-      background-color: rgba(0, 0, 0, 0.15);
-      color: beige;
-    }
+th {
+  background-color: rgba(0, 0, 0, 0.2); /* ← أسود خفيف شفاف للرؤوس */
+}
+
+tr {
+  background-color: rgba(0, 0, 0, 0.1); /* ← أسود خفيف جدًا للصفوف */
+}
 
     tr {
       background-color: transparent;
     }
 
     .visitor-counter {
-      color: #f5f5dc;
+      color: #ffffff;
       font-size: 0.8rem;
         margin-top: -10px;
     }
@@ -99,7 +103,7 @@
 
     .group-link {
       color: #4dd0e1;
-      font-size: 0.65rem;
+      font-size: 0.9rem;
       margin-top: 9px;
       display: block;
       text-decoration: none;
