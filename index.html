@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Almarai', sans-serif;
-      color: #cccccc;
+      color: #e5e5e5;
       text-align: center;
       overflow-x: hidden;
     }
@@ -19,7 +19,7 @@
 .colon {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #cccccc; /* أو أي لون يناسب التصميم */
+  color: #e5e5e5; /* أو أي لون يناسب التصميم */
   padding: 0 6px;
 }
     
@@ -53,7 +53,7 @@
     }
 
     h1 {
-      color: ffffff;
+      color: #e5e5e5;
       font-size: 0.7rem;
       margin-bottom: 10px;
     }
@@ -61,7 +61,7 @@
     .section-title {
       font-size: 0.9rem;
       margin: 8px 0 6px 0;
-      color: rgba(255, 255, 255, 0.8);
+      color: #e5e5e5;
     }
 
     table {
@@ -72,24 +72,22 @@
     }
 
     th, td {
-  padding: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1); /* حدود ناعمة */
-  color: #cccccc; /* ← نص أبيض */
-}
+      padding: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    }
 
-th {
-  background-color: rgba(0, 0, 0, 0.2); /* ← أسود خفيف شفاف للرؤوس */
-}
+    th {
+      background-color: rgba(0, 0, 0, 0.15);
+      color: beige;
+    }
 
-tr {
-  background-color: rgba(0, 0, 0, 0.1); /* ← أسود خفيف جدًا للصفوف */
-}
-
+    tr {
+      background-color: transparent;
     }
 
     .visitor-counter {
-      color: #cccccc;
-      font-size: 0.1rem;
+      color: #e5e5e5;
+      font-size: 0.8rem;
         margin-top: -10px;
     }
 
@@ -99,15 +97,13 @@ tr {
       color: #ff6666;
     }
 
-.group-link {
-  color: #4dd0e1;
-  font-size: 0.6rem !important; /* ← هنا التكبير الحقيقي */
-  font-weight: bold;
-  text-align: center;
-  display: block;
-  margin-top: 10px;
-  text-decoration: none;
-}
+    .group-link {
+      color: #4dd0e1;
+      font-size: 0.65rem;
+      margin-top: 9px;
+      display: block;
+      text-decoration: none;
+    }
 
     .small-number {
       font-size: 0.8rem !important;
@@ -168,7 +164,7 @@ tr {
   <span id="visitor-count" class="small-number">0</span>
 </div>
 
-    <a class="group-link" href="https://t.me/wem_90">الدعــم الدفنـي</a>
+    <a class="group-link" href="https://t.me/Wem_90">الدعـم الدفنــي</a>
   </div>
 
   <script>
@@ -225,12 +221,14 @@ tr {
   document.getElementById(prefix + "-day").textContent = targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
   document.getElementById(prefix + "-remaining").textContent = days + " يوم";
   document.getElementById(prefix + "-countdown").textContent =
-    totalHours + " س " + minutes + " د " + seconds + " ث";
+    totalHours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية،";
 }
     function updateAll() {
       const eligibility = getNextDate(27);
+      eligibility.setHours(0, 0, 0, 0);
       let payment = getNextDate(1);
       payment = adjustPaymentDate(payment);
+      payment.setHours(0, 0, 0, 0);
       updateSection(eligibility, "eligibility");
       updateSection(payment, "payment");
     }
