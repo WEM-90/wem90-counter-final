@@ -80,9 +80,13 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-    tr {
-      background-color: transparent;
-    }
+    tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.15); /* صف زوجي أسود خفيف */
+}
+
+tr:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.05); /* صف فردي أفتح */
+}
 
     .visitor-counter {
       color: #e5e5e5;
