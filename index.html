@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -15,14 +15,12 @@
       text-align: center;
       overflow-x: hidden;
     }
-
     .colon {
       font-size: 1.8rem;
       font-weight: bold;
       color: #e5e5e5;
       padding: 0 6px;
     }
-
     .background-layer {
       position: fixed;
       top: 0;
@@ -32,7 +30,6 @@
       background-color: #000;
       z-index: -2;
     }
-
     video {
       position: fixed;
       bottom: 0;
@@ -42,65 +39,53 @@
       object-fit: cover;
       z-index: -1;
     }
-
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 70vh;
-      padding-top: 0px;
     }
-
     h1 {
       color: #e5e5e5;
       font-size: 0.7rem;
       margin-bottom: 10px;
     }
-
     .section-title {
       font-size: 0.9rem;
       margin: 8px 0 6px 0;
       color: #e5e5e5;
     }
-
     table {
       width: 90%;
       margin: 4px auto 14px auto;
       border-collapse: collapse;
       font-size: 0.8rem;
     }
-
     th, td {
       padding: 6px;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
-
     th {
       background-color: rgba(0, 0, 0, 0.15);
       color: #e5e5e5;
     }
-
     td {
       color: #ffffff;
     }
-
     tr {
       background-color: rgba(0, 0, 0, 0.15);
     }
-
     .visitor-counter {
       color: #e5e5e5;
       font-size: 0.8rem;
       margin-top: -10px;
     }
-
     #visitor-count {
       font-weight: bold;
       font-size: 1.5rem;
       color: #ff6666;
     }
-
     .group-link {
       color: #4dd0e1;
       font-size: 0.65rem;
@@ -108,11 +93,9 @@
       display: block;
       text-decoration: none;
     }
-
     .small-number {
       font-size: 0.8rem !important;
     }
-
     @media (max-width: 480px) {
       h1 { font-size: 0.95rem; }
       table { font-size: 0.7rem; }
@@ -124,7 +107,6 @@
 <body>
 
   <div class="background-layer"></div>
-
   <video autoplay loop muted playsinline>
     <source src="eid2.mp4" type="video/mp4">
   </video>
@@ -155,7 +137,8 @@
     </table>
 
     <div class="visitor-counter">
-      عدد الزائرين <span class="colon">:</span>
+      عدد الزائرين
+      <span class="colon">:</span>
       <span id="visitor-count" class="small-number">0</span>
     </div>
 
@@ -163,21 +146,22 @@
   </div>
 
   <script>
-    // عداد الزوار
+    // 🔹 عداد الزوار
     fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
-      .then(() => {
-        fetch('https://sa-3fxj.onrender.com/get-count')
-          .then(res => res.json())
-          .then(data => { document.getElementById('visitor-count').textContent = data.count; });
-      })
-      .catch(() => { document.getElementById('visitor-count').textContent = 'خطأ في الاتصال'; });
+      .then(() => fetch('https://sa-3fxj.onrender.com/get-count'))
+      .then(res => res.json())
+      .then(data => document.getElementById('visitor-count').textContent = data.count)
+      .catch(() => document.getElementById('visitor-count').textContent = 'خطأ في الاتصال');
 
-    // دوال التواريخ
+    const weekdays = ["الأحــد", "الإثنيــن", "الثلاثــاء", "الأربعــاء", "الخميــس", "الجمعــة", "السبــت"];
+
+    // 🔹 تواريخ الأهلية والإيداع
     function getNextDate(day) {
       const now = new Date();
       let year = now.getFullYear();
       let month = now.getMonth();
       let target = new Date(year, month, day);
+
       if (target <= now) {
         month += 1;
         if (month > 11) { year += 1; month = 0; }
@@ -190,21 +174,32 @@
       const now = new Date();
       let year = now.getFullYear();
       let month = now.getMonth();
-      let payment = new Date(year, month, 1);
 
+      let payment = new Date(year, month, 1);
       if (payment <= now) {
         month += 1;
         if (month > 11) { year += 1; month = 0; }
         payment = new Date(year, month, 1);
       }
 
-      let wd = payment.getDay();
-      if (wd === 5) payment.setDate(payment.getDate() - 1); // جمعة → خميس
-      if (wd === 6) payment.setDate(payment.getDate() + 1); // سبت → أحد
+      // تعديل عطلة نهاية الأسبوع
+      while (payment.getDay() === 5 || payment.getDay() === 6) {
+        payment.setDate(payment.getDate() + 1);
+      }
 
+      // تأكد أنه مستقبلي دائمًا
+      if (payment <= now) {
+        month += 1;
+        if (month > 11) { year += 1; month = 0; }
+        payment = new Date(year, month, 1);
+        while (payment.getDay() === 5 || payment.getDay() === 6) {
+          payment.setDate(payment.getDate() + 1);
+        }
+      }
       return payment;
     }
 
+    // 🔹 تحديث الجداول
     function updateSection(targetDate, prefix) {
       const now = new Date();
       const diff = targetDate - now;
@@ -219,8 +214,7 @@
                       String(targetDate.getDate()).padStart(2, '0');
 
       document.getElementById(prefix + "-date").textContent = dateStr;
-      document.getElementById(prefix + "-day").textContent =
-        targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
+      document.getElementById(prefix + "-day").textContent = weekdays[targetDate.getDay()];
       document.getElementById(prefix + "-remaining").textContent = days + " يوم";
       document.getElementById(prefix + "-countdown").textContent =
         totalHours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
