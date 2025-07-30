@@ -15,14 +15,12 @@
       text-align: center;
       overflow-x: hidden;
     }
-
     .colon {
       font-size: 1.8rem;
       font-weight: bold;
       color: #e5e5e5;
       padding: 0 6px;
     }
-
     .background-layer {
       position: fixed;
       top: 0;
@@ -32,7 +30,6 @@
       background-color: #000;
       z-index: -2;
     }
-
     video {
       position: fixed;
       bottom: 0;
@@ -42,65 +39,53 @@
       object-fit: cover;
       z-index: -1;
     }
-
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 70vh;
-      padding-top: 0px;
     }
-
     h1 {
       color: #e5e5e5;
       font-size: 0.7rem;
       margin-bottom: 10px;
     }
-
     .section-title {
       font-size: 0.9rem;
       margin: 8px 0 6px 0;
       color: #e5e5e5;
     }
-
     table {
       width: 90%;
       margin: 4px auto 14px auto;
       border-collapse: collapse;
       font-size: 0.8rem;
     }
-
     th, td {
       padding: 6px;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
-
     th {
       background-color: rgba(0, 0, 0, 0.15);
-      color: #e5e5e5; /* الرؤوس رمادي فاتح */
+      color: #e5e5e5;
     }
-
     td {
-      color: #ffffff; /* الصفوف الداخلية أبيض */
+      color: #ffffff;
     }
-
     tr {
       background-color: rgba(0, 0, 0, 0.15);
     }
-
     .visitor-counter {
       color: #e5e5e5;
       font-size: 0.8rem;
       margin-top: -10px;
     }
-
     #visitor-count {
       font-weight: bold;
       font-size: 1.5rem;
       color: #ff6666;
     }
-
     .group-link {
       color: #4dd0e1;
       font-size: 0.65rem;
@@ -108,31 +93,14 @@
       display: block;
       text-decoration: none;
     }
-
     .small-number {
       font-size: 0.8rem !important;
-    }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 0.95rem;
-      }
-      table {
-        font-size: 0.7rem;
-      }
-      #visitor-count {
-        font-size: 1.3rem;
-      }
-      .group-link {
-        font-size: 0.6rem;
-      }
     }
   </style>
 </head>
 <body>
 
   <div class="background-layer"></div>
-
   <video autoplay loop muted playsinline>
     <source src="eid2.mp4" type="video/mp4">
   </video>
@@ -174,47 +142,40 @@
   <script>
     // عداد الزوار
     fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
-      .then(() => {
-        fetch('https://sa-3fxj.onrender.com/get-count')
-          .then(res => res.json())
-          .then(data => {
-            document.getElementById('visitor-count').textContent = data.count;
-          });
-      })
-      .catch(() => {
-        document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
-      });
+      .then(() => fetch('https://sa-3fxj.onrender.com/get-count'))
+      .then(res => res.json())
+      .then(data => { document.getElementById('visitor-count').textContent = data.count; })
+      .catch(() => { document.getElementById('visitor-count').textContent = 'خطأ في الاتصال'; });
 
-    function getNextDate(day, adjustWeekend = false) {
+    // دوال العد التنازلي
+    function getNextEligibilityDate() {
       const now = new Date();
       let year = now.getFullYear();
       let month = now.getMonth();
-      let target = new Date(year, month, day, 23, 59, 59); // نهاية اليوم
-
+      let target = new Date(year, month, 27);
       if (target <= now) {
         month++;
-        if (month > 11) { year++; month = 0; }
-        target = new Date(year, month, day, 23, 59, 59);
+        if (month > 11) { month = 0; year++; }
+        target = new Date(year, month, 27);
       }
-
-      if (adjustWeekend) {
-        if (target.getDay() === 5) target.setDate(target.getDate() - 1); // جمعة
-        if (target.getDay() === 6) target.setDate(target.getDate() + 1); // سبت
-      }
-
       return target;
+    }
+
+    function getFixedPaymentDate() {
+      return new Date(2025, 8, 1, 0, 0, 0); // 1 سبتمبر 2025
     }
 
     function updateSection(targetDate, prefix) {
       const now = new Date();
       let diff = targetDate - now;
 
-      const dateStr = targetDate.getFullYear() + "/" +
-                      String(targetDate.getMonth() + 1).padStart(2, '0') + "/" +
+      const dateStr = targetDate.getFullYear() + "-" +
+                      String(targetDate.getMonth() + 1).padStart(2, '0') + "-" +
                       String(targetDate.getDate()).padStart(2, '0');
 
       document.getElementById(prefix + "-date").textContent = dateStr;
-      document.getElementById(prefix + "-day").textContent = targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
+      document.getElementById(prefix + "-day").textContent =
+        targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
 
       if (diff <= 0) {
         document.getElementById(prefix + "-remaining").textContent = "اليوم";
@@ -224,7 +185,6 @@
         const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
-
         document.getElementById(prefix + "-remaining").textContent = days + " يوم";
         document.getElementById(prefix + "-countdown").textContent =
           hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
@@ -232,9 +192,8 @@
     }
 
     function updateAll() {
-      const eligibility = getNextDate(27, false); // الأهلية
-      const payment = getNextDate(1, true); // الإيداع
-
+      const eligibility = getNextEligibilityDate();
+      const payment = getFixedPaymentDate();
       updateSection(eligibility, "eligibility");
       updateSection(payment, "payment");
     }
