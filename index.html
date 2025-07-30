@@ -16,6 +16,23 @@
       overflow-x: hidden;
     }
 
+    .colon {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #e5e5e5;
+      padding: 0 6px;
+    }
+    
+    .background-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      z-index: -2;
+    }
+
     video {
       position: fixed;
       bottom: 0;
@@ -71,6 +88,18 @@
       background-color: rgba(0, 0, 0, 0.15);
     }
 
+    .visitor-counter {
+      color: #e5e5e5;
+      font-size: 0.8rem;
+      margin-top: -10px;
+    }
+
+    #visitor-count {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #ff6666;
+    }
+
     .group-link {
       color: #4dd0e1;
       font-size: 0.65rem;
@@ -78,9 +107,22 @@
       display: block;
       text-decoration: none;
     }
+
+    .small-number {
+      font-size: 0.8rem !important;
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 0.95rem; }
+      table { font-size: 0.7rem; }
+      #visitor-count { font-size: 1.3rem; }
+      .group-link { font-size: 0.6rem; }
+    }
   </style>
 </head>
 <body>
+
+  <div class="background-layer"></div>
 
   <video autoplay loop muted playsinline>
     <source src="eid2.mp4" type="video/mp4">
@@ -111,65 +153,88 @@
       </tr>
     </table>
 
+    <div class="visitor-counter">
+      عدد الزائرين
+      <span class="colon">:</span>
+      <span id="visitor-count" class="small-number">0</span>
+    </div>
+
     <a class="group-link" href="https://t.me/Wem_90">الدعــم الفنــي</a>
   </div>
 
-<script>
-function getNextDate(day) {
-  const now = new Date();
-  let year = now.getFullYear();
-  let month = now.getMonth();
-  let target = new Date(year, month, day);
+  <script>
+    // عداد الزوار
+    fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
+      .then(() => {
+        fetch('https://sa-3fxj.onrender.com/get-count')
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('visitor-count').textContent = data.count;
+          });
+      })
+      .catch(() => {
+        document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
+      });
 
-  if (target <= now) {
-    month++;
-    if (month > 11) { year++; month = 0; }
-    target = new Date(year, month, day);
-  }
-  return target;
-}
+    function getNextDate(day) {
+      const now = new Date();
+      let year = now.getFullYear();
+      let month = now.getMonth();
+      let target = new Date(year, month, day);
+      if (target <= now) {
+        month += 1;
+        if (month > 11) {
+          year += 1;
+          month = 0;
+        }
+        target = new Date(year, month, day);
+      }
+      return target;
+    }
 
-function adjustPaymentDate(date) {
-  const wd = date.getDay();
-  if (wd === 5) date.setDate(date.getDate() - 1); // الجمعة
-  if (wd === 6) date.setDate(date.getDate() + 1); // السبت
-  return date;
-}
+    function adjustPaymentDate(date) {
+      const wd = date.getDay();
+      if (wd === 5) date.setDate(date.getDate() - 1); // جمعة
+      if (wd === 6) date.setDate(date.getDate() + 1); // سبت
+      return date;
+    }
 
-function updateSection(targetDate, prefix) {
-  const now = new Date();
-  const diff = targetDate - now;
+    function updateSection(targetDate, prefix) {
+      const now = new Date();
+      const diff = targetDate - now;
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const totalHours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
-  document.getElementById(prefix + "-date").textContent =
-    targetDate.toISOString().split('T')[0];
-  document.getElementById(prefix + "-day").textContent =
-    targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
-  document.getElementById(prefix + "-remaining").textContent =
-    days + " يوم";
-  document.getElementById(prefix + "-countdown").textContent =
-    hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
-}
+      const dateStr = targetDate.getFullYear() + "-" +
+                      String(targetDate.getMonth() + 1).padStart(2, '0') + "-" +
+                      String(targetDate.getDate()).padStart(2, '0');
 
-function updateAll() {
-  const eligibility = getNextDate(27);
-  eligibility.setHours(0, 0, 0, 0);
+      document.getElementById(prefix + "-date").textContent = dateStr;
+      document.getElementById(prefix + "-day").textContent = targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
+      document.getElementById(prefix + "-remaining").textContent = days + " يوم";
+      document.getElementById(prefix + "-countdown").textContent =
+        totalHours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
+    }
 
-  let payment = getNextDate(1);
-  payment = adjustPaymentDate(payment);
-  payment.setHours(0, 0, 0, 0);
+    function updateAll() {
+      const eligibility = getNextDate(27);
+      eligibility.setHours(0, 0, 0, 0);
 
-  updateSection(eligibility, "eligibility");
-  updateSection(payment, "payment");
-}
+      let payment = getNextDate(1);
+      payment = adjustPaymentDate(payment);
+      payment.setHours(0, 0, 0, 0);
 
-updateAll();
-setInterval(updateAll, 1000);
-</script>
+      updateSection(eligibility, "eligibility");
+      updateSection(payment, "payment");
+    }
+
+    // يحدث نفسه كل ثانية
+    setInterval(updateAll, 1000);
+    updateAll();
+  </script>
 
 </body>
 </html>
