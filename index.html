@@ -78,11 +78,11 @@
 
     th {
       background-color: rgba(0, 0, 0, 0.15);
-      color: #e5e5e5;
+      color: #e5e5e5; /* الرؤوس رمادي فاتح */
     }
 
     td {
-      color: #ffffff;
+      color: #ffffff; /* الصفوف الداخلية أبيض */
     }
 
     tr {
@@ -185,8 +185,8 @@
         document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
       });
 
-    // دالة أقرب تاريخ معين
-    function getNextDate(day) {
+    // ======== دوال العد التنازلي المحسنة ========
+    function getNextDate(day, adjustWeekend = false) {
       const now = new Date();
       let year = now.getFullYear();
       let month = now.getMonth();
@@ -197,54 +197,50 @@
         if (month > 11) { year++; month = 0; }
         target = new Date(year, month, day);
       }
+
+      if (adjustWeekend) {
+        if (target.getDay() === 5) target.setDate(target.getDate() - 1); // جمعة → خميس
+        if (target.getDay() === 6) target.setDate(target.getDate() + 1); // سبت → أحد
+      }
+
+      target.setHours(0,0,0,0);
       return target;
     }
 
-    // تعديل يوم الإيداع
-    function adjustPaymentDate(date) {
-      const wd = date.getDay();
-      if (wd === 5) date.setDate(date.getDate() - 1); // جمعة -> خميس
-      if (wd === 6) date.setDate(date.getDate() + 1); // سبت -> أحد
-      return date;
-    }
-
-    function updateSection(targetDate, prefix) {
+    function updateSection(targetDate, prefix, adjustWeekend=false) {
       const now = new Date();
-      const diff = targetDate - now;
+      let diff = targetDate - now;
+
+      // لو وصل اليوم أو انتهى يبدأ يحسب الشهر الجديد تلقائي
+      if (diff <= 0) {
+        targetDate = getNextDate(prefix==="payment" ? 1 : 27, adjustWeekend);
+        diff = targetDate - now;
+      }
 
       const dateStr = targetDate.getFullYear() + "/" +
-                      String(targetDate.getMonth() + 1).padStart(2, '0') + "/" +
-                      String(targetDate.getDate()).padStart(2, '0');
+                      String(targetDate.getMonth()+1).padStart(2,'0') + "/" +
+                      String(targetDate.getDate()).padStart(2,'0');
 
       document.getElementById(prefix + "-date").textContent = dateStr;
       document.getElementById(prefix + "-day").textContent =
-        targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
+          targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
 
-      if (diff <= 0) {
-        document.getElementById(prefix + "-remaining").textContent = "اليوم";
-        document.getElementById(prefix + "-countdown").textContent = "0 ساعة، 0 دقيقة، 0 ثانية";
-      } else {
-        const days = Math.floor(diff / (1000*60*60*24));
-        const hours = Math.floor((diff / (1000*60*60)) % 24);
-        const minutes = Math.floor((diff / (1000*60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
-        document.getElementById(prefix + "-remaining").textContent = days + " يوم";
-        document.getElementById(prefix + "-countdown").textContent =
-          hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
-      }
+      document.getElementById(prefix + "-remaining").textContent = days > 0 ? days + " يوم" : "اليوم";
+      document.getElementById(prefix + "-countdown").textContent =
+        hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
     }
 
     function updateAll() {
       const eligibility = getNextDate(27);
-      eligibility.setHours(0, 0, 0, 0);
-
-      let payment = getNextDate(1);
-      payment = adjustPaymentDate(payment);
-      payment.setHours(0, 0, 0, 0);
+      const payment = getNextDate(1, true);
 
       updateSection(eligibility, "eligibility");
-      updateSection(payment, "payment");
+      updateSection(payment, "payment", true);
     }
 
     updateAll();
