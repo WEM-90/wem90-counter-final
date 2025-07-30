@@ -49,6 +49,7 @@
       align-items: center;
       justify-content: center;
       height: 70vh;
+      padding-top: 0px;
     }
 
     h1 {
@@ -77,11 +78,11 @@
 
     th {
       background-color: rgba(0, 0, 0, 0.15);
-      color: #e5e5e5;
+      color: #e5e5e5; /* الرؤوس رمادي فاتح */
     }
 
     td {
-      color: #ffffff;
+      color: #ffffff; /* الصفوف الداخلية أبيض */
     }
 
     tr {
@@ -113,10 +114,18 @@
     }
 
     @media (max-width: 480px) {
-      h1 { font-size: 0.95rem; }
-      table { font-size: 0.7rem; }
-      #visitor-count { font-size: 1.3rem; }
-      .group-link { font-size: 0.6rem; }
+      h1 {
+        font-size: 0.95rem;
+      }
+      table {
+        font-size: 0.7rem;
+      }
+      #visitor-count {
+        font-size: 1.3rem;
+      }
+      .group-link {
+        font-size: 0.6rem;
+      }
     }
   </style>
 </head>
@@ -165,21 +174,28 @@
   <script>
     // عداد الزوار
     fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
-      .then(() => fetch('https://sa-3fxj.onrender.com/get-count'))
-      .then(res => res.json())
-      .then(data => { document.getElementById('visitor-count').textContent = data.count; })
-      .catch(() => { document.getElementById('visitor-count').textContent = 'خطأ في الاتصال'; });
+      .then(() => {
+        fetch('https://sa-3fxj.onrender.com/get-count')
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('visitor-count').textContent = data.count;
+          });
+      })
+      .catch(() => {
+        document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
+      });
 
+    // دوال العد التنازلي
     function getNextDate(day, fixedMonth = null) {
       const now = new Date();
       let year = now.getFullYear();
       let month = fixedMonth !== null ? fixedMonth : now.getMonth();
 
       let target = new Date(year, month, day);
-      if (target < now) {
+      if (target <= now) {
         if (fixedMonth === null) {
-          month++;
-          if (month > 11) { year++; month = 0; }
+          month += 1;
+          if (month > 11) { year += 1; month = 0; }
           target = new Date(year, month, day);
         }
       }
@@ -188,17 +204,15 @@
 
     function adjustPaymentDate(date) {
       const wd = date.getDay();
-      if (wd === 5) date.setDate(date.getDate() - 1); // جمعة
-      if (wd === 6) date.setDate(date.getDate() + 1); // سبت
+      if (wd === 5) { date.setDate(date.getDate() - 1); } // جمعة
+      if (wd === 6) { date.setDate(date.getDate() + 1); } // سبت
       return date;
     }
 
     function updateSection(targetDate, prefix) {
       const now = new Date();
-      const endOfDay = new Date(targetDate);
-      endOfDay.setHours(23, 59, 59, 999);
+      let diff = targetDate - now;
 
-      let diff = endOfDay - now;
       const dateStr = targetDate.getFullYear() + "-" +
                       String(targetDate.getMonth() + 1).padStart(2, '0') + "-" +
                       String(targetDate.getDate()).padStart(2, '0');
@@ -207,7 +221,7 @@
       document.getElementById(prefix + "-day").textContent = targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
 
       if (diff <= 0) {
-        document.getElementById(prefix + "-remaining").textContent = "انتهى";
+        document.getElementById(prefix + "-remaining").textContent = "اليوم";
         document.getElementById(prefix + "-countdown").textContent = "0 ساعة، 0 دقيقة، 0 ثانية";
       } else {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -223,8 +237,11 @@
 
     function updateAll() {
       const eligibility = getNextDate(27);
-      let payment = getNextDate(1, 8); // مثال لشهر 9
+      eligibility.setHours(0, 0, 0, 0);
+
+      let payment = getNextDate(1, 8); // 8 = سبتمبر (الشهور تبدأ من 0)
       payment = adjustPaymentDate(payment);
+      payment.setHours(0, 0, 0, 0);
 
       updateSection(eligibility, "eligibility");
       updateSection(payment, "payment");
