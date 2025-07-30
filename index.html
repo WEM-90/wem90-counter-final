@@ -7,126 +7,116 @@
   <link href="https://fonts.googleapis.com/css2?family=Almarai&display=swap" rel="stylesheet">
   <style>
     body {
-      background: url('background.mp4') no-repeat center center fixed;
-      background-size: cover;
       font-family: 'Almarai', sans-serif;
-      color: #e5e5e5;
       text-align: center;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
     }
     table {
       margin: 20px auto;
       border-collapse: collapse;
-      background: rgba(255,255,255,0.1);
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
     th, td {
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 10px 20px;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 10px 15px;
     }
     th {
-      background: rgba(128,128,128,0.3); /* رؤوس رمادي فاتح */
+      background: rgba(128,128,128,0.3);
     }
     td {
-      background: #fff; /* صفوف بيضاء */
+      background: #fff;
       color: #000;
-    }
-    h2 {
-      margin-top: 40px;
     }
   </style>
 </head>
 <body>
 
-  <h1>مواعيد صدور الأهلية ونزول الضمان المطور</h1>
+<h2>صدور أهلية الضمان المطور</h2>
+<table>
+  <tr>
+    <th>التاريخ</th>
+    <th>اليوم</th>
+    <th>الأيام المتبقية</th>
+    <th>العد التنازلي</th>
+  </tr>
+  <tr>
+    <td id="elig-date"></td>
+    <td id="elig-day"></td>
+    <td id="elig-remaining"></td>
+    <td id="elig-countdown"></td>
+  </tr>
+</table>
 
-  <h2>صدور أهلية الضمان المطور</h2>
-  <table>
-    <tr>
-      <th>التاريخ</th>
-      <th>اليوم</th>
-      <th>الأيام المتبقية</th>
-      <th>العد التنازلي</th>
-    </tr>
-    <tr>
-      <td id="eligibility-date"></td>
-      <td id="eligibility-day"></td>
-      <td id="eligibility-remaining"></td>
-      <td id="eligibility-countdown"></td>
-    </tr>
-  </table>
+<h2>نزول الضمان المطور</h2>
+<table>
+  <tr>
+    <th>التاريخ</th>
+    <th>اليوم</th>
+    <th>الأيام المتبقية</th>
+    <th>العد التنازلي</th>
+  </tr>
+  <tr>
+    <td id="pay-date"></td>
+    <td id="pay-day"></td>
+    <td id="pay-remaining"></td>
+    <td id="pay-countdown"></td>
+  </tr>
+</table>
 
-  <h2>نزول الضمان المطور</h2>
-  <table>
-    <tr>
-      <th>التاريخ</th>
-      <th>اليوم</th>
-      <th>الأيام المتبقية</th>
-      <th>العد التنازلي</th>
-    </tr>
-    <tr>
-      <td id="payment-date"></td>
-      <td id="payment-day"></td>
-      <td id="payment-remaining"></td>
-      <td id="payment-countdown"></td>
-    </tr>
-  </table>
+<script>
+const daysName = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
 
-  <script>
-    const weekdays = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+function nextDate(day){
+  const now=new Date();
+  let y=now.getFullYear(), m=now.getMonth();
+  let target=new Date(y,m,day);
+  target.setHours(0,0,0,0);
+  if(target<=now){ 
+    m++;
+    if(m>11){ m=0; y++; }
+    target=new Date(y,m,day);
+    target.setHours(0,0,0,0);
+  }
+  return target;
+}
 
-    function getNextDate(day) {
-      const now = new Date();
-      let year = now.getFullYear();
-      let month = now.getMonth();
-      let target = new Date(year, month, day);
-      target.setHours(0,0,0,0);
+// تعديل الضمان إذا وافق جمعة أو سبت
+function adjustWeekend(date){
+  const d=date.getDay();
+  if(d===5) date.setDate(date.getDate()-1); // جمعة
+  if(d===6) date.setDate(date.getDate()+1); // سبت
+  return date;
+}
 
-      if (target < now) {
-        month++;
-        if(month>11){ month=0; year++; }
-        target = new Date(year, month, day);
-        target.setHours(0,0,0,0);
-      }
-      return target;
-    }
+function fillData(prefix,date){
+  const now=new Date();
+  const diff=date-now;
+  const totalSeconds=Math.max(0,Math.floor(diff/1000));
+  const days=Math.floor(totalSeconds/(3600*24));
+  const hours=Math.floor((totalSeconds%(3600*24))/3600);
+  const minutes=Math.floor((totalSeconds%3600)/60);
+  const seconds=totalSeconds%60;
+  const totalHours=Math.floor(totalSeconds/3600);
 
-    function adjustPaymentDate(date){
-      const wd = date.getDay();
-      if (wd === 5) date.setDate(date.getDate()-1); // جمعة
-      if (wd === 6) date.setDate(date.getDate()+1); // سبت
-      return date;
-    }
+  document.getElementById(prefix+"-date").textContent=
+    date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+  document.getElementById(prefix+"-day").textContent=daysName[date.getDay()];
+  document.getElementById(prefix+"-remaining").textContent=days>0?days+" يوم":"اليوم";
+  document.getElementById(prefix+"-countdown").textContent=
+    totalHours+" ساعة، "+minutes+" دقيقة، "+seconds+" ثانية";
+}
 
-    function updateSection(targetDate, prefix){
-      const now = new Date();
-      const diff = targetDate - now;
+function updateAll(){
+  const elig=nextDate(27);
+  const pay=adjustWeekend(nextDate(1));
 
-      const days = Math.floor(diff/(1000*60*60*24));
-      const hours = Math.floor((diff/(1000*60*60))%24);
-      const minutes = Math.floor((diff/(1000*60))%60);
-      const seconds = Math.floor((diff/1000)%60);
-      const totalHours = Math.floor(diff/(1000*60*60));
+  fillData("elig",elig);
+  fillData("pay",pay);
+}
 
-      const dateStr = targetDate.getFullYear()+"-"+String(targetDate.getMonth()+1).padStart(2,"0")+"-"+String(targetDate.getDate()).padStart(2,"0");
-
-      document.getElementById(prefix+"-date").textContent = dateStr;
-      document.getElementById(prefix+"-day").textContent = weekdays[targetDate.getDay()];
-      document.getElementById(prefix+"-remaining").textContent = days>=0? days+" يوم":"اليوم";
-      document.getElementById(prefix+"-countdown").textContent = 
-        totalHours+" ساعة، "+minutes+" دقيقة، "+seconds+" ثانية";
-    }
-
-    function updateAll(){
-      const eligibility = getNextDate(27);
-      const payment = adjustPaymentDate(getNextDate(1));
-
-      updateSection(eligibility,"eligibility");
-      updateSection(payment,"payment");
-    }
-
-    setInterval(updateAll,1000);
-    updateAll();
-  </script>
+setInterval(updateAll,1000);
+updateAll();
+</script>
 
 </body>
 </html>
