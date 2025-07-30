@@ -78,11 +78,11 @@
 
     th {
       background-color: rgba(0, 0, 0, 0.15);
-      color: #e5e5e5; /* الرؤوس رمادي فاتح */
+      color: #e5e5e5;
     }
 
     td {
-      color: #ffffff; /* الصفوف الداخلية أبيض */
+      color: #ffffff;
     }
 
     tr {
@@ -114,18 +114,10 @@
     }
 
     @media (max-width: 480px) {
-      h1 {
-        font-size: 0.95rem;
-      }
-      table {
-        font-size: 0.7rem;
-      }
-      #visitor-count {
-        font-size: 1.3rem;
-      }
-      .group-link {
-        font-size: 0.6rem;
-      }
+      h1 { font-size: 0.95rem; }
+      table { font-size: 0.7rem; }
+      #visitor-count { font-size: 1.3rem; }
+      .group-link { font-size: 0.6rem; }
     }
   </style>
 </head>
@@ -142,7 +134,7 @@
 
     <div class="section-title">صدور أهلية الضمان المطور</div>
     <table>
-      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
+      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي بالساعات</th></tr>
       <tr>
         <td id="eligibility-date">--</td>
         <td id="eligibility-day">--</td>
@@ -153,7 +145,7 @@
 
     <div class="section-title">نزول الضمان المطور</div>
     <table>
-      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي</th></tr>
+      <tr><th>التاريخ</th><th>اليوم</th><th>الأيام المتبقية</th><th>العد التنازلي بالساعات</th></tr>
       <tr>
         <td id="payment-date">--</td>
         <td id="payment-day">--</td>
@@ -174,30 +166,20 @@
   <script>
     // عداد الزوار
     fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
-      .then(() => {
-        fetch('https://sa-3fxj.onrender.com/get-count')
-          .then(res => res.json())
-          .then(data => {
-            document.getElementById('visitor-count').textContent = data.count;
-          });
-      })
-      .catch(() => {
-        document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
-      });
+      .then(() => fetch('https://sa-3fxj.onrender.com/get-count'))
+      .then(res => res.json())
+      .then(data => { document.getElementById('visitor-count').textContent = data.count; })
+      .catch(() => { document.getElementById('visitor-count').textContent = 'خطأ في الاتصال'; });
 
-    // دوال العد التنازلي
-    function getNextDate(day, fixedMonth = null) {
+    function getNextDate(day) {
       const now = new Date();
       let year = now.getFullYear();
-      let month = fixedMonth !== null ? fixedMonth : now.getMonth();
-
+      let month = now.getMonth();
       let target = new Date(year, month, day);
       if (target <= now) {
-        if (fixedMonth === null) {
-          month += 1;
-          if (month > 11) { year += 1; month = 0; }
-          target = new Date(year, month, day);
-        }
+        month += 1;
+        if (month > 11) { year += 1; month = 0; }
+        target = new Date(year, month, day);
       }
       return target;
     }
@@ -225,13 +207,13 @@
         document.getElementById(prefix + "-countdown").textContent = "0 ساعة، 0 دقيقة، 0 ثانية";
       } else {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const totalHours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
 
         document.getElementById(prefix + "-remaining").textContent = days + " يوم";
         document.getElementById(prefix + "-countdown").textContent =
-          hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
+          totalHours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
       }
     }
 
@@ -239,7 +221,7 @@
       const eligibility = getNextDate(27);
       eligibility.setHours(0, 0, 0, 0);
 
-      let payment = getNextDate(1, 8); // 8 = سبتمبر (الشهور تبدأ من 0)
+      let payment = getNextDate(1);
       payment = adjustPaymentDate(payment);
       payment.setHours(0, 0, 0, 0);
 
