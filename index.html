@@ -182,12 +182,16 @@
         document.getElementById(prefix + "-countdown").textContent = "0 ساعة، 0 دقيقة، 0 ثانية";
       } else {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor(diff / (1000 * 60));
+        const seconds = Math.floor(diff / 1000);
+
+        // العد الطويل
         document.getElementById(prefix + "-remaining").textContent = days + " يوم";
         document.getElementById(prefix + "-countdown").textContent =
-          hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
+          (days*24 + hours%24) + " ساعة، " +
+          (minutes%60) + " دقيقة، " +
+          (seconds%60) + " ثانية";
       }
     }
 
