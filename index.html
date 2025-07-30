@@ -15,12 +15,14 @@
       text-align: center;
       overflow-x: hidden;
     }
+
     .colon {
       font-size: 1.8rem;
       font-weight: bold;
       color: #e5e5e5;
       padding: 0 6px;
     }
+
     .background-layer {
       position: fixed;
       top: 0;
@@ -30,6 +32,7 @@
       background-color: #000;
       z-index: -2;
     }
+
     video {
       position: fixed;
       bottom: 0;
@@ -39,53 +42,65 @@
       object-fit: cover;
       z-index: -1;
     }
+
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 70vh;
+      padding-top: 0px;
     }
+
     h1 {
       color: #e5e5e5;
       font-size: 0.7rem;
       margin-bottom: 10px;
     }
+
     .section-title {
       font-size: 0.9rem;
       margin: 8px 0 6px 0;
       color: #e5e5e5;
     }
+
     table {
       width: 90%;
       margin: 4px auto 14px auto;
       border-collapse: collapse;
       font-size: 0.8rem;
     }
+
     th, td {
       padding: 6px;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
+
     th {
       background-color: rgba(0, 0, 0, 0.15);
-      color: #e5e5e5;
+      color: #e5e5e5; /* الرؤوس رمادي فاتح */
     }
+
     td {
-      color: #ffffff;
+      color: #ffffff; /* الصفوف الداخلية أبيض */
     }
+
     tr {
       background-color: rgba(0, 0, 0, 0.15);
     }
+
     .visitor-counter {
       color: #e5e5e5;
       font-size: 0.8rem;
       margin-top: -10px;
     }
+
     #visitor-count {
       font-weight: bold;
       font-size: 1.5rem;
       color: #ff6666;
     }
+
     .group-link {
       color: #4dd0e1;
       font-size: 0.65rem;
@@ -93,14 +108,31 @@
       display: block;
       text-decoration: none;
     }
+
     .small-number {
       font-size: 0.8rem !important;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 0.95rem;
+      }
+      table {
+        font-size: 0.7rem;
+      }
+      #visitor-count {
+        font-size: 1.3rem;
+      }
+      .group-link {
+        font-size: 0.6rem;
+      }
     }
   </style>
 </head>
 <body>
 
   <div class="background-layer"></div>
+
   <video autoplay loop muted playsinline>
     <source src="eid2.mp4" type="video/mp4">
   </video>
@@ -142,27 +174,39 @@
   <script>
     // عداد الزوار
     fetch('https://sa-3fxj.onrender.com/increment', { method: 'POST' })
-      .then(() => fetch('https://sa-3fxj.onrender.com/get-count'))
-      .then(res => res.json())
-      .then(data => { document.getElementById('visitor-count').textContent = data.count; })
-      .catch(() => { document.getElementById('visitor-count').textContent = 'خطأ في الاتصال'; });
+      .then(() => {
+        fetch('https://sa-3fxj.onrender.com/get-count')
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('visitor-count').textContent = data.count;
+          });
+      })
+      .catch(() => {
+        document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
+      });
 
     // دوال العد التنازلي
-    function getNextEligibilityDate() {
+    function getNextDate(day, fixedMonth = null) {
       const now = new Date();
       let year = now.getFullYear();
-      let month = now.getMonth();
-      let target = new Date(year, month, 27);
+      let month = fixedMonth !== null ? fixedMonth : now.getMonth();
+
+      let target = new Date(year, month, day);
       if (target <= now) {
-        month++;
-        if (month > 11) { month = 0; year++; }
-        target = new Date(year, month, 27);
+        if (fixedMonth === null) {
+          month += 1;
+          if (month > 11) { year += 1; month = 0; }
+          target = new Date(year, month, day);
+        }
       }
       return target;
     }
 
-    function getFixedPaymentDate() {
-      return new Date(2025, 8, 1, 0, 0, 0); // 1 سبتمبر 2025
+    function adjustPaymentDate(date) {
+      const wd = date.getDay();
+      if (wd === 5) { date.setDate(date.getDate() - 1); } // جمعة
+      if (wd === 6) { date.setDate(date.getDate() + 1); } // سبت
+      return date;
     }
 
     function updateSection(targetDate, prefix) {
@@ -174,30 +218,31 @@
                       String(targetDate.getDate()).padStart(2, '0');
 
       document.getElementById(prefix + "-date").textContent = dateStr;
-      document.getElementById(prefix + "-day").textContent =
-        targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
+      document.getElementById(prefix + "-day").textContent = targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
 
       if (diff <= 0) {
         document.getElementById(prefix + "-remaining").textContent = "اليوم";
         document.getElementById(prefix + "-countdown").textContent = "0 ساعة، 0 دقيقة، 0 ثانية";
       } else {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor(diff / (1000 * 60));
-        const seconds = Math.floor(diff / 1000);
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
 
-        // العد الطويل
         document.getElementById(prefix + "-remaining").textContent = days + " يوم";
         document.getElementById(prefix + "-countdown").textContent =
-          (days*24 + hours%24) + " ساعة، " +
-          (minutes%60) + " دقيقة، " +
-          (seconds%60) + " ثانية";
+          hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
       }
     }
 
     function updateAll() {
-      const eligibility = getNextEligibilityDate();
-      const payment = getFixedPaymentDate();
+      const eligibility = getNextDate(27);
+      eligibility.setHours(0, 0, 0, 0);
+
+      let payment = getNextDate(1, 8); // 8 = سبتمبر (الشهور تبدأ من 0)
+      payment = adjustPaymentDate(payment);
+      payment.setHours(0, 0, 0, 0);
+
       updateSection(eligibility, "eligibility");
       updateSection(payment, "payment");
     }
