@@ -185,62 +185,58 @@
         document.getElementById('visitor-count').textContent = 'خطأ في الاتصال';
       });
 
-    // ======== دوال العد التنازلي المحسنة ========
     function getNextDate(day, adjustWeekend = false) {
       const now = new Date();
       let year = now.getFullYear();
       let month = now.getMonth();
-      let target = new Date(year, month, day);
+      let target = new Date(year, month, day, 23, 59, 59); // نهاية اليوم
 
       if (target <= now) {
         month++;
         if (month > 11) { year++; month = 0; }
-        target = new Date(year, month, day);
+        target = new Date(year, month, day, 23, 59, 59);
       }
 
       if (adjustWeekend) {
-        if (target.getDay() === 5) target.setDate(target.getDate() - 1); // جمعة → خميس
-        if (target.getDay() === 6) target.setDate(target.getDate() + 1); // سبت → أحد
+        if (target.getDay() === 5) target.setDate(target.getDate() - 1); // جمعة
+        if (target.getDay() === 6) target.setDate(target.getDate() + 1); // سبت
       }
 
-      target.setHours(0,0,0,0);
       return target;
     }
 
-    function updateSection(targetDate, prefix, adjustWeekend=false) {
+    function updateSection(targetDate, prefix) {
       const now = new Date();
       let diff = targetDate - now;
 
-      // لو وصل اليوم أو انتهى يبدأ يحسب الشهر الجديد تلقائي
-      if (diff <= 0) {
-        targetDate = getNextDate(prefix==="payment" ? 1 : 27, adjustWeekend);
-        diff = targetDate - now;
-      }
-
       const dateStr = targetDate.getFullYear() + "/" +
-                      String(targetDate.getMonth()+1).padStart(2,'0') + "/" +
-                      String(targetDate.getDate()).padStart(2,'0');
+                      String(targetDate.getMonth() + 1).padStart(2, '0') + "/" +
+                      String(targetDate.getDate()).padStart(2, '0');
 
       document.getElementById(prefix + "-date").textContent = dateStr;
-      document.getElementById(prefix + "-day").textContent =
-          targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
+      document.getElementById(prefix + "-day").textContent = targetDate.toLocaleDateString('ar-EG', { weekday: 'long' });
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
+      if (diff <= 0) {
+        document.getElementById(prefix + "-remaining").textContent = "اليوم";
+        document.getElementById(prefix + "-countdown").textContent = "0 ساعة، 0 دقيقة، 0 ثانية";
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
 
-      document.getElementById(prefix + "-remaining").textContent = days > 0 ? days + " يوم" : "اليوم";
-      document.getElementById(prefix + "-countdown").textContent =
-        hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
+        document.getElementById(prefix + "-remaining").textContent = days + " يوم";
+        document.getElementById(prefix + "-countdown").textContent =
+          hours + " ساعة، " + minutes + " دقيقة، " + seconds + " ثانية";
+      }
     }
 
     function updateAll() {
-      const eligibility = getNextDate(27);
-      const payment = getNextDate(1, true);
+      const eligibility = getNextDate(27, false); // الأهلية
+      const payment = getNextDate(1, true); // الإيداع
 
       updateSection(eligibility, "eligibility");
-      updateSection(payment, "payment", true);
+      updateSection(payment, "payment");
     }
 
     updateAll();
